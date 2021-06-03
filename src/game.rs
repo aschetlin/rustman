@@ -16,6 +16,14 @@ impl Game {
             chars_guessed: Vec::new(),
         }
     }
+
+    fn incr_correct_guesses(&mut self) {
+        self.correct_guesses += 1
+    }
+
+    fn dec_lives(&mut self) {
+        self.lives -= 1
+    }
 }
 
 pub fn main() {
@@ -25,16 +33,15 @@ pub fn main() {
         draw_game(&game);
 
         if let Some(i) = get_guess() {
-            game.chars_guessed.push(i);
-
             match test_guess(i, &game) {
                 true => {
-                    game.correct_guesses += 1;
+                    game.incr_correct_guesses();
                 }
                 false => {
-                    game.lives -= 1;
+                    game.dec_lives();
                 }
             }
+            game.chars_guessed.push(i);
         }
 
         if game.word.chars().count() == game.correct_guesses {
@@ -44,13 +51,13 @@ pub fn main() {
     }
 }
 
-fn format_secret_word(word: &String, mask: &Vec<char>) -> String {
+fn format_secret_word(word: &String, guesses: &Vec<char>) -> String {
     let mut formatted_string = String::new();
 
     for c in word.chars() {
         formatted_string.push(if c == ' ' {
             c
-        } else if mask.contains(&c) {
+        } else if guesses.contains(&c) {
             c
         } else {
             '_'
