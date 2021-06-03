@@ -27,7 +27,8 @@ impl Game {
 }
 
 pub fn main() {
-    let mut game = Game::new("rustman".to_string());
+    let mut game = Game::new("large boulder the size of a small boulder".to_string());
+    let word_chars = get_unique_chars(&game.word);
 
     while game.solved == false && game.lives > 0 {
         draw_game(&game);
@@ -44,7 +45,7 @@ pub fn main() {
             game.chars_guessed.push(i);
         }
 
-        if game.word.chars().count() == game.correct_guesses {
+        if word_chars == game.correct_guesses {
             game.solved = true;
         }
     }
@@ -85,6 +86,18 @@ fn test_guess(guess: char, game: &Game) -> bool {
     } else {
         false
     }
+}
+
+fn get_unique_chars(word: &String) -> usize {
+    let mut result: Vec<char> = Vec::new();
+    let split_word: String = word.split_whitespace().collect();
+
+    for char in split_word.chars() {
+        if !result.contains(&char) {
+            result.push(char);
+        }
+    }
+    result.len()
 }
 
 fn draw_game(game: &Game) {
