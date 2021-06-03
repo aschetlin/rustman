@@ -7,7 +7,7 @@ struct Game {
 }
 
 impl Game {
-    fn new(word: String) -> Game {
+    fn new(word: String) -> Self {
         Game {
             word,
             solved: false,
