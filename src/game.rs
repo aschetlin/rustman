@@ -1,9 +1,11 @@
+use std::collections::HashSet;
+
 struct Game {
     word: String,
     solved: bool,
     lives: u8,
     correct_guesses: usize,
-    chars_guessed: Vec<char>,
+    chars_guessed: HashSet<char>,
 }
 
 impl Game {
@@ -13,7 +15,7 @@ impl Game {
             solved: false,
             lives: 5,
             correct_guesses: 0,
-            chars_guessed: Vec::new(),
+            chars_guessed: vec![].into_iter().collect(),
         }
     }
 
@@ -42,10 +44,10 @@ pub fn main() {
                     game.dec_lives();
                 }
             }
-            game.chars_guessed.push(i);
+            game.chars_guessed.insert(i);
         }
 
-        if word_chars == game.correct_guesses {
+        if word_chars == game.chars_guessed {
             game.solved = true;
         }
     }
@@ -53,7 +55,7 @@ pub fn main() {
     draw_game(&game);
 }
 
-fn format_secret_word(word: &String, guesses: &Vec<char>) -> String {
+fn format_secret_word(word: &String, guesses: &HashSet<char>) -> String {
     let mut formatted_string = String::new();
 
     for c in word.chars() {
@@ -88,16 +90,15 @@ fn test_guess(guess: char, game: &Game) -> bool {
     }
 }
 
-fn get_unique_chars(word: &String) -> usize {
-    let mut result: Vec<char> = Vec::new();
+fn get_unique_chars(word: &String) -> HashSet<char> {
+    let mut result: HashSet<char> = vec![].into_iter().collect();
     let split_word: String = word.split_whitespace().collect();
 
     for char in split_word.chars() {
-        if !result.contains(&char) {
-            result.push(char);
-        }
+        result.insert(char);
     }
-    result.len()
+
+    result
 }
 
 fn draw_game(game: &Game) {
