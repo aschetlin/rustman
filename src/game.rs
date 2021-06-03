@@ -46,9 +46,10 @@ pub fn main() {
 
         if game.word.chars().count() == game.correct_guesses {
             game.solved = true;
-            draw_game(&game);
         }
     }
+
+    draw_game(&game);
 }
 
 fn format_secret_word(word: &String, guesses: &Vec<char>) -> String {
@@ -88,31 +89,158 @@ fn test_guess(guess: char, game: &Game) -> bool {
 
 fn draw_game(game: &Game) {
     clear();
-    println!("{}", format_secret_word(&game.word, &game.chars_guessed));
 
     if game.solved {
         println!("Game solved!");
     } else {
         match game.lives {
             0 => {
-                println!("Game over!");
+                println!(
+                    "┌───────────────
+│           ▼
+│         ┌───┐
+│         │x x│
+│         └─┬─┘
+│           │
+│     ┌─────┼─────┐
+│     │     │     │
+│           │
+│           │
+│           │
+│           │
+│        ┌──┴──┐
+│        │     │
+│        │     │
+│        │     │
+│        │     │
+│        │     │
+│       ─┘     └─
+│"
+                );
             }
             1 => {
-                println!("1 life left!");
+                println!(
+                    "┌───────────────
+│           ▼
+│         ┌───┐
+│         │   │
+│         └─┬─┘
+│           │
+│     ┌─────┼─────┐
+│     │     │     │
+│           │
+│           │
+│           │
+│           │
+│        ┌──┴──┐
+│        │     │
+│        │     │
+│        │     │
+│        │     │
+│        │     │
+│       ─┘     └─
+│"
+                );
             }
             2 => {
-                println!("2 lives left.");
+                println!(
+                    "┌───────────────
+│           ▼
+│         ┌───┐
+│         │   │
+│         └─┬─┘
+│           │
+│           │
+│           │
+│           │
+│           │
+│           │
+│           │
+│        ┌──┴──┐
+│        │     │
+│        │     │
+│        │     │
+│        │     │
+│        │     │
+│       ─┘     └─
+│"
+                )
             }
             3 => {
-                println!("3 lives left.");
+                println!(
+                    "┌───────────────
+│           ▼
+│         ┌───┐
+│         │   │
+│         └─┬─┘
+│           │
+│           │
+│           │
+│           │
+│           │
+│           │
+│           │
+│
+│
+│
+│
+│
+│
+│
+│"
+                )
             }
             4 => {
-                println!("4 lives left.");
+                println!(
+                    "┌───────────────
+│           ▼
+│         ┌───┐
+│         │   │
+│         └───┘
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│"
+                );
             }
             _ => {
-                println!("{} lives left.", game.lives)
+                println!(
+                    "┌───────────────
+│           ▼
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│
+│"
+                );
             }
         }
+        println!("\n{}", format_secret_word(&game.word, &game.chars_guessed));
+        println!("\n{} lives left.", game.lives)
     }
 }
 
