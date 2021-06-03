@@ -27,7 +27,7 @@ pub fn main() {
         if let Some(i) = get_guess() {
             game.chars_guessed.push(i);
 
-            match test_guess(i, &game.word) {
+            match test_guess(i, &game) {
                 true => {
                     game.correct_guesses += 1;
                 }
@@ -71,8 +71,8 @@ fn get_guess() -> Option<char> {
     input.trim().chars().nth(0)
 }
 
-fn test_guess(guess: char, word: &String) -> bool {
-    if word.contains(guess) {
+fn test_guess(guess: char, game: &Game) -> bool {
+    if game.word.contains(guess) && !game.chars_guessed.contains(&guess) {
         true
     } else {
         false
