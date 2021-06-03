@@ -6,10 +6,10 @@ struct Game {
     chars_guessed: Vec<char>,
 }
 
-impl Default for Game {
-    fn default() -> Self {
+impl Game {
+    fn new(word: String) -> Game {
         Game {
-            word: String::from("rustman"),
+            word,
             solved: false,
             lives: 5,
             correct_guesses: 0,
@@ -19,10 +19,10 @@ impl Default for Game {
 }
 
 pub fn main() {
-    let mut game = Game::default();
+    let mut game = Game::new("rustman".to_string());
 
     while game.solved == false && game.lives > 0 {
-        println!("{}", format_secret_word(&game.word, &game.chars_guessed));
+        draw_game(&game);
 
         if let Some(i) = get_guess() {
             game.chars_guessed.push(i);
@@ -30,20 +30,16 @@ pub fn main() {
             match test_guess(i, &game.word) {
                 true => {
                     game.correct_guesses += 1;
-                    println!("{} is a correct guess!", i);
-                    println!("Correct guesses: {}", game.correct_guesses);
                 }
                 false => {
                     game.lives -= 1;
-                    println!("{} is not a correct guess.", i);
-                    println!("{} lives remaining.", game.lives);
                 }
             }
         }
 
         if game.word.chars().count() == game.correct_guesses {
             game.solved = true;
-            println!("Game solved.");
+            draw_game(&game);
         }
     }
 }
@@ -81,4 +77,39 @@ fn test_guess(guess: char, word: &String) -> bool {
     } else {
         false
     }
+}
+
+fn draw_game(game: &Game) {
+    clear();
+    println!("{}", format_secret_word(&game.word, &game.chars_guessed));
+
+    if game.solved {
+        println!("Game solved!");
+    } else {
+        match game.lives {
+            0 => {
+                println!("Game over!");
+            }
+            1 => {
+                println!("1 life left!");
+            }
+            2 => {
+                println!("2 lives left.");
+            }
+            3 => {
+                println!("3 lives left.");
+            }
+            4 => {
+                println!("4 lives left.");
+            }
+            _ => {
+                println!("{} lives left.", game.lives)
+            }
+        }
+    }
+}
+
+fn clear() {
+    // Clear terminal screen and place cursor at first row & column
+    print!("\x1B[2J\x1B[1;1H");
 }
