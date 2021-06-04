@@ -4,8 +4,8 @@ struct Game {
     word: String,
     solved: bool,
     lives: u8,
-    correct_guesses: usize,
-    chars_guessed: HashSet<char>,
+    correct_guesses: HashSet<char>,
+    incorrect_guesses: HashSet<char>,
 }
 
 impl Game {
@@ -14,13 +14,9 @@ impl Game {
             word,
             solved: false,
             lives: 5,
-            correct_guesses: 0,
-            chars_guessed: vec![].into_iter().collect(),
+            correct_guesses: vec![].into_iter().collect(),
+            incorrect_guesses: vec![].into_iter().collect(),
         }
-    }
-
-    fn incr_correct_guesses(&mut self) {
-        self.correct_guesses += 1
     }
 
     fn dec_lives(&mut self) {
@@ -38,16 +34,16 @@ pub fn main() {
         if let Some(i) = get_guess() {
             match test_guess(i, &game) {
                 true => {
-                    game.incr_correct_guesses();
+                    game.correct_guesses.insert(i);
                 }
                 false => {
                     game.dec_lives();
+                    game.incorrect_guesses.insert(i);
                 }
             }
-            game.chars_guessed.insert(i);
         }
 
-        if word_chars == game.chars_guessed {
+        if word_chars == game.correct_guesses {
             game.solved = true;
         }
     }
@@ -83,7 +79,7 @@ fn get_guess() -> Option<char> {
 }
 
 fn test_guess(guess: char, game: &Game) -> bool {
-    if game.word.contains(guess) && !game.chars_guessed.contains(&guess) {
+    if game.word.contains(guess) && !game.incorrect_guesses.contains(&guess) {
         true
     } else {
         false
@@ -253,7 +249,10 @@ fn draw_game(game: &Game) {
                 );
             }
         }
-        println!("\n{}", format_secret_word(&game.word, &game.chars_guessed));
+        println!(
+            "\n{}",
+            format_secret_word(&game.word, &game.correct_guesses)
+        );
         println!("\n{} lives left.", game.lives)
     }
 }
