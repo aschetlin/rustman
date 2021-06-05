@@ -1,0 +1,12 @@
+version: "3"
+services:
+  dev:
+    build: .
+    volumes:
+      - .:/rustman
+      - .:/home/jovyan/work/rustman
+    ports:
+      - "8888:8888"
+    command:
+      - "start-notebook.sh"
+      - "--NotebookApp.password='sha1:cfab0fc0217b:289363801d9d90ff76b16873706684d592b570aa'"
