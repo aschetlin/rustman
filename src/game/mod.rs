@@ -88,7 +88,7 @@ fn test_guess(guess: char, game: &Game) -> bool {
 
 fn get_unique_chars(word: &String) -> HashSet<char> {
     let mut result: HashSet<char> = vec![].into_iter().collect();
-    let split_word: String = word.split_whitespace().collect();
+    let split_word: String = word.to_lowercase().split_whitespace().collect();
 
     for char in split_word.chars() {
         result.insert(char);
