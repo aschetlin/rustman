@@ -20,7 +20,7 @@ pub fn test_guess(guess: char, game: &Game) -> bool {
 }
 
 pub fn get_unique_chars(word: &String) -> HashSet<char> {
-    let mut result: HashSet<char> = vec![].into_iter().collect();
+    let mut result: HashSet<char> = HashSet::new();
     let split_word: String = word.to_lowercase().split_whitespace().collect();
 
     for char in split_word.chars() {
@@ -28,4 +28,26 @@ pub fn get_unique_chars(word: &String) -> HashSet<char> {
     }
 
     result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_test_guess() {
+        let game = Game::new("test".to_string());
+        assert!(test_guess('t', &game))
+    }
+
+    #[test]
+    fn test_get_unique_chars() {
+        let word = String::from("test words");
+        let desired_output: HashSet<char> = ['t', 'e', 's', 'w', 'o', 'r', 'd']
+            .iter()
+            .cloned()
+            .collect();
+
+        assert_eq!(get_unique_chars(&word), desired_output)
+    }
 }
