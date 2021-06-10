@@ -1,7 +1,7 @@
 mod game;
 mod visuals;
 
-use game::{get_guess, get_unique_chars, test_guess};
+use game::{get_guess, handle_guess, get_unique_chars};
 use std::collections::HashSet;
 use visuals::draw_game;
 
@@ -37,15 +37,7 @@ pub fn main() {
         draw_game(&game);
 
         if let Some(i) = get_guess() {
-            match test_guess(i, &game) {
-                true => {
-                    game.correct_guesses.insert(i);
-                }
-                false => {
-                    game.dec_lives();
-                    game.incorrect_guesses.insert(i);
-                }
-            }
+            handle_guess(i, &mut game);
         }
 
         if word_chars == game.correct_guesses {

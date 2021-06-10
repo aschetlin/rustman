@@ -19,6 +19,18 @@ pub fn test_guess(guess: char, game: &Game) -> bool {
     }
 }
 
+pub fn handle_guess(guess: char, game: &mut Game) {
+    match test_guess(guess, game) {
+        true => {
+            game.correct_guesses.insert(guess);
+        }
+        false => {
+            game.dec_lives();
+            game.incorrect_guesses.insert(guess);
+        }
+    }
+}
+
 pub fn get_unique_chars(word: &String) -> HashSet<char> {
     let mut result: HashSet<char> = HashSet::new();
     let split_word: String = word.to_lowercase().split_whitespace().collect();
@@ -38,6 +50,26 @@ mod tests {
     fn test_test_guess() {
         let game = Game::new("test".to_string());
         assert!(test_guess('t', &game))
+    }
+
+    #[test]
+    fn test_handle_correct_guess() {
+        let mut game = Game::new("test".to_string());
+        let guess: char = 't';
+        handle_guess(guess, &mut game);
+
+        assert!(game.correct_guesses.contains(&guess));
+    }
+
+    #[test]
+    fn test_handle_incorrect_guess() {
+        let mut game = Game::new("test".to_string());
+        let guess: char = 'x';
+        let previous_lives = game.lives;
+        handle_guess(guess, &mut game);
+
+        assert!(game.incorrect_guesses.contains(&guess));
+        assert!(game.lives < previous_lives);
     }
 
     #[test]
