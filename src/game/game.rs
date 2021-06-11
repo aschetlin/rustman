@@ -1,6 +1,44 @@
-use super::{Game, HashSet};
+use super::HashSet;
 
-pub fn get_guess() -> Option<char> {
+pub struct Game {
+    pub word: String,
+    word_chars: HashSet<char>,
+    pub solved: bool,
+    pub lives: u8,
+    pub correct_guesses: HashSet<char>,
+    incorrect_guesses: HashSet<char>,
+}
+
+impl Game {
+    pub fn new(word: String) -> Self {
+        let unique_chars = get_unique_chars(&word);
+
+        Game {
+            word,
+            word_chars: unique_chars,
+            solved: false,
+            lives: 5,
+            correct_guesses: HashSet::new(),
+            incorrect_guesses: HashSet::new(),
+        }
+    }
+
+    pub fn dec_lives(&mut self) {
+        self.lives -= 1
+    }
+}
+
+pub fn game_events(mut game: &mut Game) {
+    if let Some(i) = get_guess() {
+        handle_guess(i, &mut game);
+    }
+
+    if game.word_chars == game.correct_guesses {
+        game.solved = true;
+    }
+}
+
+fn get_guess() -> Option<char> {
     let mut input = String::new();
 
     println!("Enter a guess.");
@@ -11,15 +49,7 @@ pub fn get_guess() -> Option<char> {
     input.trim().chars().nth(0)
 }
 
-pub fn test_guess(guess: char, game: &Game) -> bool {
-    if game.word.contains(guess) && !game.incorrect_guesses.contains(&guess) {
-        true
-    } else {
-        false
-    }
-}
-
-pub fn handle_guess(guess: char, game: &mut Game) {
+fn handle_guess(guess: char, game: &mut Game) {
     match test_guess(guess, game) {
         true => {
             game.correct_guesses.insert(guess);
@@ -31,7 +61,7 @@ pub fn handle_guess(guess: char, game: &mut Game) {
     }
 }
 
-pub fn get_unique_chars(word: &String) -> HashSet<char> {
+fn get_unique_chars(word: &String) -> HashSet<char> {
     let mut result: HashSet<char> = HashSet::new();
     let split_word: String = word.to_lowercase().split_whitespace().collect();
 
@@ -42,15 +72,17 @@ pub fn get_unique_chars(word: &String) -> HashSet<char> {
     result
 }
 
+fn test_guess(guess: char, game: &Game) -> bool {
+    if game.word.contains(guess) && !game.incorrect_guesses.contains(&guess) {
+        true
+    } else {
+        false
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_test_guess() {
-        let game = Game::new("test".to_string());
-        assert!(test_guess('t', &game))
-    }
 
     #[test]
     fn test_handle_correct_guess() {
@@ -81,5 +113,11 @@ mod tests {
             .collect();
 
         assert_eq!(get_unique_chars(&word), desired_output)
+    }
+
+    #[test]
+    fn test_test_guess() {
+        let game = Game::new("test".to_string());
+        assert!(test_guess('t', &game))
     }
 }
