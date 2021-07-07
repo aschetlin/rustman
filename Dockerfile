@@ -35,8 +35,8 @@ RUN set -eux; \
 USER 1000
 RUN rustup component add rust-src
 RUN cargo install --force --git https://github.com/google/evcxr.git evcxr_jupyter
-# RUN cargo install evcxr_jupyter
 RUN evcxr_jupyter --install
+RUN cargo install evcxr_repl
 USER root
 RUN apt-get update && apt-get install -y libssl-dev pkg-config
 USER 1000

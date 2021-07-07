@@ -1,0 +1,14 @@
+#+title:rustman: the classic danger of hangman on a safe, modern platform 
+
+** running the dev container
+#+begin_example
+docker-compose up -d --build --remove-orphans
+#+end_example
+
+** entering the dev container and running the repl
+#+begin_example
+docker exec -it rustman_dev_1 bash
+# and then...
+evcxr
+#+end_example
+[[./resources/images/evcxr_example.png]]
