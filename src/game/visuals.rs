@@ -1,7 +1,7 @@
 use super::{Game, HashSet};
 
 pub fn draw_game(game: &Game) {
-    clear();
+    clear_screen();
 
     if game.solved {
         println!("Game solved!");
@@ -184,7 +184,7 @@ fn format_secret_word(word: &String, guesses: &HashSet<char>) -> String {
     formatted_string
 }
 
-fn clear() {
+fn clear_screen() {
     // Clear terminal screen and place cursor at first row & column
     print!("\x1B[2J\x1B[1;1H");
 }
